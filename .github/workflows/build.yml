@@ -170,21 +170,23 @@ jobs:
 
     - name: Download prebuilt dependencies
       shell: msys2 {0}
-      working-directory: /d/kodi
-      run: cmd /c "tools\\buildsteps\\windows\\download-dependencies.bat x64 x64"
+      run: |
+        cd /d/kodi
+        cmd /c "tools\\buildsteps\\windows\\download-dependencies.bat x64 x64"
 
     - name: Configure (CMake + Visual Studio 2022)
       shell: msys2 {0}
-      working-directory: /d/kodi
       run: |
+        cd /d/kodi
         cmake -B build -G "Visual Studio 17 2022" -A x64 \
           -DCMAKE_BUILD_TYPE=Release \
           -DENABLE_INTERNAL_FFMPEG=OFF
 
     - name: Build Kodi
       shell: msys2 {0}
-      working-directory: /d/kodi
-      run: cmake --build build --config Release -j $(nproc)
+      run: |
+        cd /d/kodi
+        cmake --build build --config Release -j $(nproc)
 
     - name: Package (install + tar.gz)
       shell: msys2 {0}
@@ -336,6 +338,13 @@ jobs:
       run: |
         cp -rf overlay/* /tmp/kodi/
         cp -rf overlay/addons/* /tmp/kodi/project/addons/ 2>/dev/null || true
+
+    - name: Bypass native cmake build (RPi)
+      run: |
+        mkdir -p /tmp/kodi/tools/depends/native/cmake/x86_64-linux-native/bin
+        ln -sf $(which cmake) /tmp/kodi/tools/depends/native/cmake/x86_64-linux-native/bin/cmake
+        touch /tmp/kodi/tools/depends/native/cmake/x86_64-linux-native/bin/cmake
+        touch /tmp/kodi/tools/depends/native/cmake/.installed-x86_64-linux-native
 
     - name: Bootstrap depends
       working-directory: /tmp/kodi/tools/depends
