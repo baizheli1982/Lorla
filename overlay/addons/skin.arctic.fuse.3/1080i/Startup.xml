@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<window>
+    <defaultcontrol></defaultcontrol>
+    <width>3840</width>
+    <height>2160</height>
+
+    <controls>
+        <control type="image">
+            <left>0</left>
+            <top>0</top>
+            <width>3840</width>
+            <height>2160</height>
+            <texture colordiffuse="FF000000">common/white.png</texture>
+        </control>
+
+        <control type="image">
+            <left>1232</left>
+            <top>696</top>
+            <width>1376</width>
+            <height>768</height>
+            <texture>lorla_splash.png</texture>
+            <aspectratio>keep</aspectratio>
+        </control>
+    </controls>
+</window>
