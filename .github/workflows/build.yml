@@ -1,4 +1,4 @@
-name: Build Android APK
+name: Build Lorla (Kodi 21 Omega + Arctic Fuse 3)
 
 on:
   workflow_dispatch:
@@ -6,7 +6,7 @@ on:
     branches: [main, master]
 
 jobs:
-  build:
+  android:
     runs-on: ubuntu-22.04
     timeout-minutes: 360
     strategy:
@@ -123,4 +123,70 @@ jobs:
       with:
         name: kodi-lorla-${{ matrix.arch }}
         path: /tmp/kodi/kodiapp*.apk
+        retention-days: 30
+
+  windows:
+    runs-on: windows-2022
+    timeout-minutes: 180
+
+    steps:
+    - name: Checkout overlay
+      uses: actions/checkout@v4
+
+    - name: Setup MSYS2
+      uses: msys2/setup-msys2@v2
+      with:
+        msystem: MINGW64
+        update: false
+        install: >-
+          base-devel
+          git
+          zip
+
+    - name: Clone Kodi 21.3-Omega
+      shell: msys2 {0}
+      run: |
+        git clone --depth 1 --branch 21.3-Omega https://github.com/xbmc/xbmc.git /tmp/kodi
+
+    - name: Clone skin dependencies
+      working-directory: /tmp/kodi/addons
+      shell: msys2 {0}
+      run: |
+        git clone --depth 1 --branch omega https://github.com/jurialmunkey/skin.arctic.fuse.3.git skin.arctic.fuse.3
+        git clone --depth 1 --branch nexus https://github.com/jurialmunkey/script.skinvariables.git script.skinvariables
+        git clone --depth 1 https://github.com/jurialmunkey/script.texturemaker.git script.texturemaker
+        git clone --depth 1 --branch nexus https://github.com/jurialmunkey/plugin.video.themoviedb.helper.git plugin.video.themoviedb.helper
+        git clone --depth 1 https://github.com/jurialmunkey/resource.font.robotocjksc.git resource.font.robotocjksc
+        git clone --depth 1 https://github.com/XBMC-Addons/resource.images.weathericons.white.git resource.images.weathericons.white
+        git clone --depth 1 https://github.com/XBMC-Addons/resource.images.studios.coloured.git resource.images.studios.coloured
+
+    - name: Apply overlay
+      shell: msys2 {0}
+      run: cp -rf overlay/* /tmp/kodi/
+
+    - name: Download prebuilt dependencies
+      shell: cmd
+      working-directory: /tmp/kodi
+      run: |
+        curl -fsSL https://mirrors.kodi.tv/build-deps/windows/build-aux-21.3-Omega-win64.7z -o %TEMP%\deps.7z
+        "%ProgramFiles%\7-Zip\7z.exe" x -y %TEMP%\deps.7z -o%cd%
+
+    - name: Configure (CMake + Visual Studio 2022)
+      shell: msys2 {0}
+      working-directory: /tmp/kodi
+      run: |
+        cmake -B build -G "Visual Studio 17 2022" -A x64 \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DENABLE_INTERNAL_FFMPEG=ON
+
+    - name: Build Kodi
+      shell: msys2 {0}
+      working-directory: /tmp/kodi
+      run: cmake --build build --config Release -j $NUMBER_OF_PROCESSORS
+
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: kodi-lorla-win64
+        path: /tmp/kodi/build/*.exe
         retention-days: 30
