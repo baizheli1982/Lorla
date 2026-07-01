@@ -164,12 +164,10 @@ jobs:
       shell: msys2 {0}
       run: cp -rf overlay/* /tmp/kodi/
 
-    - name: Download prebuilt dependencies
+    - name: Download prebuilt dependencies (Kodi official script)
       shell: cmd
       working-directory: /tmp/kodi
-      run: |
-        curl -fsSL https://mirrors.kodi.tv/build-deps/windows/build-aux-21.3-Omega-win64.7z -o %TEMP%\deps.7z
-        "%ProgramFiles%\7-Zip\7z.exe" x -y %TEMP%\deps.7z -o%cd%
+      run: call tools\buildsteps\windows\download-dependencies.bat x64 x64
 
     - name: Configure (CMake + Visual Studio 2022)
       shell: msys2 {0}
@@ -177,16 +175,16 @@ jobs:
       run: |
         cmake -B build -G "Visual Studio 17 2022" -A x64 \
           -DCMAKE_BUILD_TYPE=Release \
-          -DENABLE_INTERNAL_FFMPEG=ON
+          -DENABLE_INTERNAL_FFMPEG=OFF
 
     - name: Build Kodi
-      shell: msys2 {0}
+      shell: cmd
       working-directory: /tmp/kodi
-      run: cmake --build build --config Release -j $NUMBER_OF_PROCESSORS
+      run: cmake --build build --config Release -j %NUMBER_OF_PROCESSORS%
 
     - name: Upload build artifact
       uses: actions/upload-artifact@v4
       with:
         name: kodi-lorla-win64
-        path: /tmp/kodi/build/*.exe
+        path: /tmp/kodi/build/Release/*.exe
         retention-days: 30
