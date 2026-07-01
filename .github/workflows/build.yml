@@ -72,7 +72,7 @@ jobs:
       uses: actions/cache@v4
       with:
         path: ~/android-tarballs
-        key: kodi-tarballs-v3-${{ hashFiles('.github/workflows/android-build.yml') }}
+        key: kodi-tarballs-v3-${{ hashFiles('.github/workflows/build.yml') }}
         restore-keys: kodi-tarballs-v3-
 
     - name: Bootstrap depends
