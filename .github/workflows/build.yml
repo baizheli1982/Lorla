@@ -329,33 +329,24 @@ jobs:
         cp -rf overlay/* /tmp/kodi/
         cp -rf overlay/addons/* /tmp/kodi/project/addons/ 2>/dev/null || true
 
-    - name: Bypass native cmake build (RPi)
-      run: |
-        mkdir -p /tmp/kodi/tools/depends/native/cmake/x86_64-linux-native/bin
-        ln -sf $(which cmake) /tmp/kodi/tools/depends/native/cmake/x86_64-linux-native/bin/cmake
-        touch /tmp/kodi/tools/depends/native/cmake/x86_64-linux-native/bin/cmake
-        touch /tmp/kodi/tools/depends/native/cmake/.installed-x86_64-linux-native
-
     - name: Bootstrap depends
       working-directory: /tmp/kodi/tools/depends
       run: ./bootstrap
 
-    - name: Configure depends
+    - name: Configure depends (RPi)
       working-directory: /tmp/kodi/tools/depends
       run: |
         ./configure \
           --host=${{ matrix.host }} \
           --with-rendersystem=gles \
+          --enable-gles \
+          --with-cmake=cmake \
           --prefix=$PWD/xbmc-depends \
           --disable-debug
 
-    - name: Build native depends
+    - name: Build all depends
       working-directory: /tmp/kodi/tools/depends
-      run: make -j$(nproc) -C native
-
-    - name: Build target depends
-      working-directory: /tmp/kodi/tools/depends
-      run: make -j$(nproc) -C target
+      run: make -j$(nproc)
 
     - name: Build binary addons
       working-directory: /tmp/kodi
