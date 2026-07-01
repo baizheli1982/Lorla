@@ -182,11 +182,19 @@ jobs:
       working-directory: /tmp/kodi
       run: cmake --build build --config Release -j %NUMBER_OF_PROCESSORS%
 
+    - name: Package (install + tar.gz)
+      shell: cmd
+      run: |
+        cd /tmp/kodi
+        cmake --install build --config Release --prefix C:\tmp\kodi-install
+        cd C:\tmp\kodi-install
+        tar -czf C:\tmp\kodi-lorla-win64.tar.gz *
+
     - name: Upload build artifact
       uses: actions/upload-artifact@v4
       with:
         name: kodi-lorla-win64
-        path: /tmp/kodi/build/Release/*.exe
+        path: C:\tmp\kodi-lorla-win64.tar.gz
         retention-days: 30
 
   apple:
@@ -355,11 +363,18 @@ jobs:
         cd build
         make -j$(nproc) || make
 
+    - name: Package (make install + tar.gz)
+      run: |
+        cd /tmp/kodi/build
+        make install DESTDIR=/tmp/kodi-install
+        cd /tmp/kodi-install
+        tar czf /tmp/kodi-lorla-rpi-${{ matrix.arch }}.tar.gz .
+
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: kodi-lorla-rpi-${{ matrix.arch }}
-        path: /tmp/kodi/build/kodi-*
+        path: /tmp/kodi-lorla-rpi-${{ matrix.arch }}.tar.gz
         retention-days: 30
 
   webos:
@@ -431,9 +446,16 @@ jobs:
         cd build
         make -j$(nproc) || make
 
+    - name: Package (make install + tar.gz)
+      run: |
+        cd /tmp/kodi/build
+        make install DESTDIR=/tmp/kodi-install
+        cd /tmp/kodi-install
+        tar czf /tmp/kodi-lorla-webos.tar.gz .
+
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: kodi-lorla-webos
-        path: /tmp/kodi/build/kodi-*
+        path: /tmp/kodi-lorla-webos.tar.gz
         retention-days: 30
