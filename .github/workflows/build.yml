@@ -139,11 +139,12 @@ jobs:
       shell: bash
       run: git clone --depth 1 --branch 21.3-Omega https://github.com/xbmc/xbmc.git /d/kodi
 
-    - name: Clone skin dependencies
+    - name: Clone skin dependencies (Windows)
       shell: bash
       run: |
-        mkdir -p /d/kodi/addons
-        cd /d/kodi/addons
+        cd /d/kodi
+        mkdir -p project/addons
+        cd project/addons
         git clone --depth 1 --branch omega https://github.com/jurialmunkey/skin.arctic.fuse.3.git skin.arctic.fuse.3
         git clone --depth 1 --branch nexus https://github.com/jurialmunkey/script.skinvariables.git script.skinvariables
         git clone --depth 1 https://github.com/jurialmunkey/script.texturemaker.git script.texturemaker
@@ -152,12 +153,12 @@ jobs:
         git clone --depth 1 https://github.com/XBMC-Addons/resource.images.weathericons.white.git resource.images.weathericons.white
         git clone --depth 1 https://github.com/XBMC-Addons/resource.images.studios.coloured.git resource.images.studios.coloured
 
-    - name: Apply overlay
+    - name: Apply overlay (Windows)
       shell: bash
       run: |
-        cp -rf overlay/* /d/kodi/
-        mkdir -p /d/kodi/project/addons
-        cp -rf overlay/addons/* /d/kodi/project/addons/ 2>/dev/null || true
+        cd /d/kodi
+        cp -rf $GITHUB_WORKSPACE/overlay/* .
+        cp -rf $GITHUB_WORKSPACE/overlay/addons/* project/addons/ 2>/dev/null || true
 
     - name: Download prebuilt dependencies
       shell: cmd
