@@ -1,0 +1,67 @@
+name: Build webOS
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  build-webos:
+    runs-on: ubuntu-22.04
+    container:
+      image: ghcr.io/xbmc/xbmc-webos-toolchain:latest
+    timeout-minutes: 360
+
+    steps:
+    - name: Checkout overlay
+      uses: actions/checkout@v4
+
+    - name: Clone Kodi 21.3-Omega
+      run: git clone --depth 1 --branch 21.3-Omega https://github.com/xbmc/xbmc.git /tmp/kodi
+
+    - name: Clone skin dependencies
+      run: |
+        mkdir -p /tmp/kodi/addons
+        cd /tmp/kodi/addons
+        git clone --depth 1 --branch omega https://github.com/jurialmunkey/skin.arctic.fuse.3.git skin.arctic.fuse.3
+        git clone --depth 1 --branch nexus https://github.com/jurialmunkey/script.skinvariables.git script.skinvariables
+        git clone --depth 1 https://github.com/jurialmunkey/script.texturemaker.git script.texturemaker
+        git clone --depth 1 --branch nexus https://github.com/jurialmunkey/plugin.video.themoviedb.helper.git plugin.video.themoviedb.helper
+        git clone --depth 1 https://github.com/jurialmunkey/resource.font.robotocjksc.git resource.font.robotocjksc
+        git clone --depth 1 https://github.com/XBMC-Addons/resource.images.weathericons.white.git resource.images.weathericons.white
+        git clone --depth 1 https://github.com/XBMC-Addons/resource.images.studios.coloured.git resource.images.studios.coloured
+
+    - name: Apply overlay
+      run: cp -rf $GITHUB_WORKSPACE/overlay/* /tmp/kodi/
+
+    - name: Bootstrap and configure depends
+      working-directory: /tmp/kodi/tools/depends
+      run: |
+        ./bootstrap
+        ./configure --host=arm-webos-linux-gnueabi --prefix=$PWD/xbmc-depends --disable-debug
+
+    - name: Build all depends
+      working-directory: /tmp/kodi/tools/depends
+      run: make -j$(nproc)
+
+    - name: Build binary addons
+      working-directory: /tmp/kodi
+      run: make -j$(nproc) -C tools/depends/target/binary-addons
+
+    - name: Configure XBMC
+      working-directory: /tmp/kodi
+      run: make -C tools/depends/target/cmakebuildsys
+
+    - name: Build and package IPK
+      working-directory: /tmp/kodi
+      run: |
+        cd build
+        make -j$(nproc) || make
+        make ipk
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: kodi-lorla-webos
+        path: /tmp/kodi/*.ipk
+        retention-days: 30

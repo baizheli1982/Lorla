@@ -157,8 +157,9 @@ jobs:
       shell: bash
       run: |
         cd /d/kodi
-        cp -rf $GITHUB_WORKSPACE/overlay/* .
-        cp -rf $GITHUB_WORKSPACE/overlay/addons/* project/addons/ 2>/dev/null || true
+        WS=$(cygpath -u "$GITHUB_WORKSPACE" 2>/dev/null || echo "$GITHUB_WORKSPACE" | sed 's|\\|/|g' | sed 's|^\([A-Z]\):|/\1|')
+        cp -rf "$WS/overlay/"* .
+        cp -rf "$WS/overlay/addons/"* project/addons/ 2>/dev/null || true
 
     - name: Download prebuilt dependencies
       shell: cmd
