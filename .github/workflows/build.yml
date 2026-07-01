@@ -27,18 +27,20 @@ jobs:
         git clone --depth 1 --branch 21.3-Omega https://github.com/xbmc/xbmc.git /tmp/kodi
 
     - name: Clone skin dependencies
-      working-directory: /tmp/kodi/addons
+      working-directory: /tmp/kodi
       run: |
-        git clone --depth 1 --branch omega https://github.com/jurialmunkey/skin.arctic.fuse.3.git skin.arctic.fuse.3
-        git clone --depth 1 --branch nexus https://github.com/jurialmunkey/script.skinvariables.git script.skinvariables
-        git clone --depth 1 https://github.com/jurialmunkey/script.texturemaker.git script.texturemaker
-        git clone --depth 1 --branch nexus https://github.com/jurialmunkey/plugin.video.themoviedb.helper.git plugin.video.themoviedb.helper
-        git clone --depth 1 https://github.com/jurialmunkey/resource.font.robotocjksc.git resource.font.robotocjksc
-        git clone --depth 1 https://github.com/XBMC-Addons/resource.images.weathericons.white.git resource.images.weathericons.white
-        git clone --depth 1 https://github.com/XBMC-Addons/resource.images.studios.coloured.git resource.images.studios.coloured
+        git clone --depth 1 --branch omega https://github.com/jurialmunkey/skin.arctic.fuse.3.git project/addons/skin.arctic.fuse.3
+        git clone --depth 1 --branch nexus https://github.com/jurialmunkey/script.skinvariables.git project/addons/script.skinvariables
+        git clone --depth 1 https://github.com/jurialmunkey/script.texturemaker.git project/addons/script.texturemaker
+        git clone --depth 1 --branch nexus https://github.com/jurialmunkey/plugin.video.themoviedb.helper.git project/addons/plugin.video.themoviedb.helper
+        git clone --depth 1 https://github.com/jurialmunkey/resource.font.robotocjksc.git project/addons/resource.font.robotocjksc
+        git clone --depth 1 https://github.com/XBMC-Addons/resource.images.weathericons.white.git project/addons/resource.images.weathericons.white
+        git clone --depth 1 https://github.com/XBMC-Addons/resource.images.studios.coloured.git project/addons/resource.images.studios.coloured
 
     - name: Apply overlay
-      run: cp -rf overlay/* /tmp/kodi/
+      run: |
+        cp -rf overlay/* /tmp/kodi/
+        cp -rf overlay/addons/* /tmp/kodi/project/addons/ 2>/dev/null || true
 
     - name: Setup JDK 17
       uses: actions/setup-java@v4
@@ -226,18 +228,20 @@ jobs:
         git clone --depth 1 --branch 21.3-Omega https://github.com/xbmc/xbmc.git /tmp/kodi
 
     - name: Clone skin dependencies
-      working-directory: /tmp/kodi/addons
+      working-directory: /tmp/kodi
       run: |
-        git clone --depth 1 --branch omega https://github.com/jurialmunkey/skin.arctic.fuse.3.git skin.arctic.fuse.3
-        git clone --depth 1 --branch nexus https://github.com/jurialmunkey/script.skinvariables.git script.skinvariables
-        git clone --depth 1 https://github.com/jurialmunkey/script.texturemaker.git script.texturemaker
-        git clone --depth 1 --branch nexus https://github.com/jurialmunkey/plugin.video.themoviedb.helper.git plugin.video.themoviedb.helper
-        git clone --depth 1 https://github.com/jurialmunkey/resource.font.robotocjksc.git resource.font.robotocjksc
-        git clone --depth 1 https://github.com/XBMC-Addons/resource.images.weathericons.white.git resource.images.weathericons.white
-        git clone --depth 1 https://github.com/XBMC-Addons/resource.images.studios.coloured.git resource.images.studios.coloured
+        git clone --depth 1 --branch omega https://github.com/jurialmunkey/skin.arctic.fuse.3.git project/addons/skin.arctic.fuse.3
+        git clone --depth 1 --branch nexus https://github.com/jurialmunkey/script.skinvariables.git project/addons/script.skinvariables
+        git clone --depth 1 https://github.com/jurialmunkey/script.texturemaker.git project/addons/script.texturemaker
+        git clone --depth 1 --branch nexus https://github.com/jurialmunkey/plugin.video.themoviedb.helper.git project/addons/plugin.video.themoviedb.helper
+        git clone --depth 1 https://github.com/jurialmunkey/resource.font.robotocjksc.git project/addons/resource.font.robotocjksc
+        git clone --depth 1 https://github.com/XBMC-Addons/resource.images.weathericons.white.git project/addons/resource.images.weathericons.white
+        git clone --depth 1 https://github.com/XBMC-Addons/resource.images.studios.coloured.git project/addons/resource.images.studios.coloured
 
     - name: Apply overlay
-      run: cp -rf overlay/* /tmp/kodi/
+      run: |
+        cp -rf overlay/* /tmp/kodi/
+        cp -rf overlay/addons/* /tmp/kodi/project/addons/ 2>/dev/null || true
 
     - name: Bootstrap depends
       working-directory: /tmp/kodi/tools/depends
@@ -316,18 +320,20 @@ jobs:
       run: git clone --depth 1 --branch 21.3-Omega https://github.com/xbmc/xbmc.git /tmp/kodi
 
     - name: Clone skin dependencies
-      working-directory: /tmp/kodi/addons
+      working-directory: /tmp/kodi
       run: |
-        git clone --depth 1 --branch omega https://github.com/jurialmunkey/skin.arctic.fuse.3.git skin.arctic.fuse.3
-        git clone --depth 1 --branch nexus https://github.com/jurialmunkey/script.skinvariables.git script.skinvariables
-        git clone --depth 1 https://github.com/jurialmunkey/script.texturemaker.git script.texturemaker
-        git clone --depth 1 --branch nexus https://github.com/jurialmunkey/plugin.video.themoviedb.helper.git plugin.video.themoviedb.helper
-        git clone --depth 1 https://github.com/jurialmunkey/resource.font.robotocjksc.git resource.font.robotocjksc
-        git clone --depth 1 https://github.com/XBMC-Addons/resource.images.weathericons.white.git resource.images.weathericons.white
-        git clone --depth 1 https://github.com/XBMC-Addons/resource.images.studios.coloured.git resource.images.studios.coloured
+        git clone --depth 1 --branch omega https://github.com/jurialmunkey/skin.arctic.fuse.3.git project/addons/skin.arctic.fuse.3
+        git clone --depth 1 --branch nexus https://github.com/jurialmunkey/script.skinvariables.git project/addons/script.skinvariables
+        git clone --depth 1 https://github.com/jurialmunkey/script.texturemaker.git project/addons/script.texturemaker
+        git clone --depth 1 --branch nexus https://github.com/jurialmunkey/plugin.video.themoviedb.helper.git project/addons/plugin.video.themoviedb.helper
+        git clone --depth 1 https://github.com/jurialmunkey/resource.font.robotocjksc.git project/addons/resource.font.robotocjksc
+        git clone --depth 1 https://github.com/XBMC-Addons/resource.images.weathericons.white.git project/addons/resource.images.weathericons.white
+        git clone --depth 1 https://github.com/XBMC-Addons/resource.images.studios.coloured.git project/addons/resource.images.studios.coloured
 
     - name: Apply overlay
-      run: cp -rf overlay/* /tmp/kodi/
+      run: |
+        cp -rf overlay/* /tmp/kodi/
+        cp -rf overlay/addons/* /tmp/kodi/project/addons/ 2>/dev/null || true
 
     - name: Bootstrap depends
       working-directory: /tmp/kodi/tools/depends
@@ -398,18 +404,20 @@ jobs:
       run: git clone --depth 1 --branch 21.3-Omega https://github.com/xbmc/xbmc.git /tmp/kodi
 
     - name: Clone skin dependencies
-      working-directory: /tmp/kodi/addons
+      working-directory: /tmp/kodi
       run: |
-        git clone --depth 1 --branch omega https://github.com/jurialmunkey/skin.arctic.fuse.3.git skin.arctic.fuse.3
-        git clone --depth 1 --branch nexus https://github.com/jurialmunkey/script.skinvariables.git script.skinvariables
-        git clone --depth 1 https://github.com/jurialmunkey/script.texturemaker.git script.texturemaker
-        git clone --depth 1 --branch nexus https://github.com/jurialmunkey/plugin.video.themoviedb.helper.git plugin.video.themoviedb.helper
-        git clone --depth 1 https://github.com/jurialmunkey/resource.font.robotocjksc.git resource.font.robotocjksc
-        git clone --depth 1 https://github.com/XBMC-Addons/resource.images.weathericons.white.git resource.images.weathericons.white
-        git clone --depth 1 https://github.com/XBMC-Addons/resource.images.studios.coloured.git resource.images.studios.coloured
+        git clone --depth 1 --branch omega https://github.com/jurialmunkey/skin.arctic.fuse.3.git project/addons/skin.arctic.fuse.3
+        git clone --depth 1 --branch nexus https://github.com/jurialmunkey/script.skinvariables.git project/addons/script.skinvariables
+        git clone --depth 1 https://github.com/jurialmunkey/script.texturemaker.git project/addons/script.texturemaker
+        git clone --depth 1 --branch nexus https://github.com/jurialmunkey/plugin.video.themoviedb.helper.git project/addons/plugin.video.themoviedb.helper
+        git clone --depth 1 https://github.com/jurialmunkey/resource.font.robotocjksc.git project/addons/resource.font.robotocjksc
+        git clone --depth 1 https://github.com/XBMC-Addons/resource.images.weathericons.white.git project/addons/resource.images.weathericons.white
+        git clone --depth 1 https://github.com/XBMC-Addons/resource.images.studios.coloured.git project/addons/resource.images.studios.coloured
 
     - name: Apply overlay
-      run: cp -rf overlay/* /tmp/kodi/
+      run: |
+        cp -rf overlay/* /tmp/kodi/
+        cp -rf overlay/addons/* /tmp/kodi/project/addons/ 2>/dev/null || true
 
     - name: Bootstrap depends
       working-directory: /tmp/kodi/tools/depends
