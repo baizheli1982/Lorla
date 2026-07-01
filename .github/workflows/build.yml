@@ -135,24 +135,14 @@ jobs:
     - name: Checkout overlay
       uses: actions/checkout@v4
 
-    - name: Setup MSYS2
-      uses: msys2/setup-msys2@v2
-      with:
-        msystem: MINGW64
-        update: false
-        install: >-
-          base-devel
-          git
-          zip
-
     - name: Clone Kodi 21.3-Omega
-      shell: msys2 {0}
-      run: |
-        git clone --depth 1 --branch 21.3-Omega https://github.com/xbmc/xbmc.git /d/kodi
+      shell: bash
+      run: git clone --depth 1 --branch 21.3-Omega https://github.com/xbmc/xbmc.git /d/kodi
 
     - name: Clone skin dependencies
-      shell: msys2 {0}
+      shell: bash
       run: |
+        mkdir -p /d/kodi/addons
         cd /d/kodi/addons
         git clone --depth 1 --branch omega https://github.com/jurialmunkey/skin.arctic.fuse.3.git skin.arctic.fuse.3
         git clone --depth 1 --branch nexus https://github.com/jurialmunkey/script.skinvariables.git script.skinvariables
@@ -163,38 +153,37 @@ jobs:
         git clone --depth 1 https://github.com/XBMC-Addons/resource.images.studios.coloured.git resource.images.studios.coloured
 
     - name: Apply overlay
-      shell: msys2 {0}
+      shell: bash
       run: |
         cp -rf overlay/* /d/kodi/
+        mkdir -p /d/kodi/project/addons
         cp -rf overlay/addons/* /d/kodi/project/addons/ 2>/dev/null || true
 
     - name: Download prebuilt dependencies
-      shell: msys2 {0}
+      shell: cmd
       run: |
-        cd /d/kodi
-        cmd /c "tools\\buildsteps\\windows\\download-dependencies.bat x64 x64"
+        cd /d D:\kodi
+        call tools\buildsteps\windows\download-dependencies.bat x64 x64
 
     - name: Configure (CMake + Visual Studio 2022)
-      shell: msys2 {0}
+      shell: cmd
       run: |
-        cd /d/kodi
-        cmake -B build -G "Visual Studio 17 2022" -A x64 \
-          -DCMAKE_BUILD_TYPE=Release \
-          -DENABLE_INTERNAL_FFMPEG=OFF
+        cd /d D:\kodi
+        cmake -B build -G "Visual Studio 17 2022" -A x64 -DCMAKE_BUILD_TYPE=Release -DENABLE_INTERNAL_FFMPEG=OFF
 
     - name: Build Kodi
-      shell: msys2 {0}
+      shell: cmd
       run: |
-        cd /d/kodi
-        cmake --build build --config Release -j $(nproc)
+        cd /d D:\kodi
+        cmake --build build --config Release -j %NUMBER_OF_PROCESSORS%
 
-    - name: Package (install + tar.gz)
-      shell: msys2 {0}
+    - name: Package (install + zip)
+      shell: cmd
       run: |
-        cd /d/kodi
-        cmake --install build --config Release --prefix /d/kodi-install
-        cd /d/kodi-install
-        tar -czf /d/kodi-lorla-win64.tar.gz *
+        cd /d D:\kodi
+        cmake --install build --config Release --prefix D:\kodi-install
+        cd /d D:\kodi-install
+        tar -czf D:\kodi-lorla-win64.tar.gz *
 
     - name: Upload build artifact
       uses: actions/upload-artifact@v4
