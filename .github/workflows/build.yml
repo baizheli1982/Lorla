@@ -188,3 +188,89 @@ jobs:
         name: kodi-lorla-win64
         path: /tmp/kodi/build/Release/*.exe
         retention-days: 30
+
+  apple:
+    runs-on: macos-14
+    timeout-minutes: 360
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: macos
+            name: macos-arm64
+            package: dmg
+            ext: dmg
+          - platform: tvos
+            name: tvos
+            package: deb
+            ext: deb
+
+    steps:
+    - name: Checkout overlay
+      uses: actions/checkout@v4
+
+    - name: Clone Kodi 21.3-Omega
+      run: |
+        git clone --depth 1 --branch 21.3-Omega https://github.com/xbmc/xbmc.git /tmp/kodi
+
+    - name: Clone skin dependencies
+      working-directory: /tmp/kodi/addons
+      run: |
+        git clone --depth 1 --branch omega https://github.com/jurialmunkey/skin.arctic.fuse.3.git skin.arctic.fuse.3
+        git clone --depth 1 --branch nexus https://github.com/jurialmunkey/script.skinvariables.git script.skinvariables
+        git clone --depth 1 https://github.com/jurialmunkey/script.texturemaker.git script.texturemaker
+        git clone --depth 1 --branch nexus https://github.com/jurialmunkey/plugin.video.themoviedb.helper.git plugin.video.themoviedb.helper
+        git clone --depth 1 https://github.com/jurialmunkey/resource.font.robotocjksc.git resource.font.robotocjksc
+        git clone --depth 1 https://github.com/XBMC-Addons/resource.images.weathericons.white.git resource.images.weathericons.white
+        git clone --depth 1 https://github.com/XBMC-Addons/resource.images.studios.coloured.git resource.images.studios.coloured
+
+    - name: Apply overlay
+      run: cp -rf overlay/* /tmp/kodi/
+
+    - name: Bootstrap depends
+      working-directory: /tmp/kodi/tools/depends
+      run: ./bootstrap
+
+    - name: Configure depends
+      working-directory: /tmp/kodi/tools/depends
+      run: |
+        ./configure \
+          --host=aarch64-apple-darwin \
+          --with-platform=${{ matrix.platform }} \
+          --prefix=$PWD/xbmc-depends \
+          --disable-debug
+
+    - name: Build native depends
+      working-directory: /tmp/kodi/tools/depends
+      run: make -j$(sysctl -n hw.ncpu) -C native
+
+    - name: Build target depends
+      working-directory: /tmp/kodi/tools/depends
+      run: make -j$(sysctl -n hw.ncpu) -C target
+
+    - name: Build binary addons
+      working-directory: /tmp/kodi
+      run: make -j$(sysctl -n hw.ncpu) -C tools/depends/target/binary-addons
+
+    - name: Configure XBMC
+      working-directory: /tmp/kodi
+      run: make -C tools/depends/target/cmakebuildsys
+
+    - name: Build XBMC
+      working-directory: /tmp/kodi
+      run: |
+        cd build
+        make -j$(sysctl -n hw.ncpu) || make
+
+    - name: Package
+      working-directory: /tmp/kodi
+      run: |
+        cd build
+        make ${{ matrix.package }}
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: kodi-lorla-${{ matrix.name }}
+        path: /tmp/kodi/*.${{ matrix.ext }}
+        retention-days: 30
