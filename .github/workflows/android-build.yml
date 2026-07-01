@@ -9,6 +9,14 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     timeout-minutes: 360
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: arm64-v8a
+            host: aarch64-linux-android
+          - arch: armeabi-v7a
+            host: arm-linux-androideabi
 
     steps:
     - name: Checkout overlay
@@ -29,7 +37,7 @@ jobs:
         git clone --depth 1 https://github.com/XBMC-Addons/resource.images.weathericons.white.git resource.images.weathericons.white
         git clone --depth 1 https://github.com/XBMC-Addons/resource.images.studios.coloured.git resource.images.studios.coloured
 
-    - name: Apply overlay (configs + translations + addons manifest)
+    - name: Apply overlay
       run: cp -rf overlay/* /tmp/kodi/
 
     - name: Setup JDK 17
@@ -64,8 +72,8 @@ jobs:
       uses: actions/cache@v4
       with:
         path: ~/android-tarballs
-        key: kodi-tarballs-v2-${{ github.sha }}
-        restore-keys: kodi-tarballs-v2-
+        key: kodi-tarballs-v3-${{ hashFiles('.github/workflows/android-build.yml') }}
+        restore-keys: kodi-tarballs-v3-
 
     - name: Bootstrap depends
       working-directory: /tmp/kodi/tools/depends
@@ -76,7 +84,7 @@ jobs:
       run: |
         ./configure \
           --with-tarballs=$HOME/android-tarballs \
-          --host=aarch64-linux-android \
+          --host=${{ matrix.host }} \
           --with-sdk-path=$ANDROID_SDK_ROOT \
           --with-ndk-path=$ANDROID_SDK_ROOT/ndk/21.4.7075529 \
           --prefix=$PWD/xbmc-depends \
@@ -113,6 +121,6 @@ jobs:
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
-        name: kodi-lorla-arm64-v8a
+        name: kodi-lorla-${{ matrix.arch }}
         path: /tmp/kodi/kodiapp*.apk
         retention-days: 30
