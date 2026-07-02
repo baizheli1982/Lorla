@@ -1,0 +1,30 @@
+name: Build Windows
+on: workflow_dispatch
+jobs:
+  windows:
+    runs-on: windows-2022
+    timeout-minutes: 180
+    steps:
+    - uses: actions/checkout@v4
+    - shell: bash
+      run: git clone --depth 1 --branch 21.3-Omega https://github.com/xbmc/xbmc.git /d/kodi
+    - shell: bash
+      run: |
+        cd /d/kodi && mkdir -p project/addons && cd project/addons
+        git clone --depth 1 --branch omega https://github.com/jurialmunkey/skin.arctic.fuse.3.git skin.arctic.fuse.3
+        git clone --depth 1 --branch nexus https://github.com/jurialmunkey/script.skinvariables.git script.skinvariables
+        git clone --depth 1 https://github.com/jurialmunkey/script.texturemaker.git script.texturemaker
+        git clone --depth 1 --branch nexus https://github.com/jurialmunkey/plugin.video.themoviedb.helper.git plugin.video.themoviedb.helper
+        git clone --depth 1 https://github.com/jurialmunkey/resource.font.robotocjksc.git resource.font.robotocjksc
+        git clone --depth 1 https://github.com/XBMC-Addons/resource.images.weathericons.white.git resource.images.weathericons.white
+        git clone --depth 1 https://github.com/XBMC-Addons/resource.images.studios.coloured.git resource.images.studios.coloured
+    - shell: bash
+      run: cd /d/kodi && WS=$(echo "$GITHUB_WORKSPACE" | sed 's|\\|/|g' | sed 's|^\([A-Z]\):|/\1|') && cp -rf "$WS/overlay/"* . && cp -rf "$WS/overlay/addons/"* project/addons/ 2>/dev/null || true
+    - shell: cmd
+      run: cd /d D:\kodi && cmake -B build -G "Visual Studio 17 2022" -A x64 -DCMAKE_BUILD_TYPE=Release -DENABLE_INTERNAL_FFMPEG=ON
+    - shell: cmd
+      run: cd /d D:\kodi && cmake --build build --config Release -j %NUMBER_OF_PROCESSORS%
+    - shell: cmd
+      run: cd /d D:\kodi && cmake --install build --config Release --prefix D:\kodi-install && cd /d D:\kodi-install && tar -czf D:\kodi-lorla-win64.tar.gz *
+    - uses: actions/upload-artifact@v4
+      with: { name: kodi-lorla-win64, path: D:\kodi-lorla-win64.tar.gz, retention-days: 30 }
