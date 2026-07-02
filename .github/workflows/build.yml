@@ -100,9 +100,9 @@ jobs:
       working-directory: /tmp/kodi/tools/depends
       run: make -j$(nproc) -C target
 
-    - name: Build binary addons
+    - name: Build binary addons (audio only)
       working-directory: /tmp/kodi
-      run: make -j$(nproc) -C tools/depends/target/binary-addons
+      run: make -j$(nproc) -C tools/depends/target/binary-addons ADDONS_BUILD="audioencoder.kodi.builtin.aac audioencoder.kodi.builtin.wma" || true
 
     - name: Configure XBMC
       working-directory: /tmp/kodi
@@ -113,6 +113,11 @@ jobs:
       run: |
         cd build
         make -j$(nproc) || make
+
+    - name: Strip debug symbols
+      run: |
+        find /tmp/kodi/addons -name "*.so" -exec aarch64-linux-android-strip --strip-unneeded {} \; 2>/dev/null || true
+        find /tmp/kodi/build -name "*.so" -exec aarch64-linux-android-strip --strip-unneeded {} \; 2>/dev/null || true
 
     - name: Package APK
       working-directory: /tmp/kodi
