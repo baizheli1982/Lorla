@@ -89,6 +89,7 @@ jobs:
           --host=${{ matrix.host }} \
           --with-sdk-path=$ANDROID_SDK_ROOT \
           --with-ndk-path=$ANDROID_SDK_ROOT/ndk/21.4.7075529 \
+          --with-ffmpeg-options="--disable-everything --enable-decoder=h264,hevc,vp9,mpeg4 --enable-parser=h264,hevc,vp9 --enable-decoder=aac,ac3,mp3,flac --enable-demuxer=mov,matroska,flv,mp3,aac --enable-protocol=file,http,https,tcp,udp,rtmp" \
           --prefix=$PWD/xbmc-depends \
           --disable-debug
 
@@ -347,6 +348,7 @@ jobs:
         ./configure \
           --host=${{ matrix.host }} \
           --with-rendersystem=gles \
+          --with-python=/usr/bin/python3 \
           --prefix=$PWD/xbmc-depends \
           --disable-debug
 
