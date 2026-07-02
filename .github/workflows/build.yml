@@ -126,12 +126,29 @@ jobs:
         cd build
         make apk
 
-    - name: Upload APK
+    - name: Upload APK (GitHub)
       uses: actions/upload-artifact@v4
       with:
         name: kodi-lorla-${{ matrix.arch }}
         path: /tmp/kodi/kodiapp*.apk
         retention-days: 30
+
+    - name: Upload to Gitee Release (国内高速下载)
+      if: matrix.arch == 'armeabi-v7a' || matrix.arch == 'arm64-v8a'
+      run: |
+        APK=$(ls /tmp/kodi/kodiapp*.apk | head -1)
+        echo "Uploading $APK to Gitee..."
+        # Delete old release if exists
+        RELEASE_ID=$(curl -s "https://gitee.com/api/v5/repos/bai-zheli/lorla/releases/latest?access_token=${{ secrets.GITEE_TOKEN }}" | python3 -c "import sys,json; print(json.load(sys.stdin).get('id',''))" 2>/dev/null)
+        if [ -n "$RELEASE_ID" ]; then
+          curl -s -X DELETE "https://gitee.com/api/v5/repos/bai-zheli/lorla/releases/$RELEASE_ID?access_token=${{ secrets.GITEE_TOKEN }}"
+        fi
+        # Create new release
+        RESP=$(curl -s -X POST "https://gitee.com/api/v5/repos/bai-zheli/lorla/releases" \
+          -H "Content-Type: application/json" \
+          -d "{\"access_token\":\"${{ secrets.GITEE_TOKEN }}\",\"tag_name\":\"android-${{ matrix.arch }}\",\"name\":\"Lorla Android ${{ matrix.arch }}\",\"body\":\"自动编译 $(date +%Y-%m-%d)\",\"target_commitish\":\"main\"}")
+        echo "Gitee response: $RESP"
+      continue-on-error: true
 
   windows:
     runs-on: windows-2022
