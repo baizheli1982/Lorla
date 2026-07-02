@@ -252,7 +252,12 @@ jobs:
           --prefix=$PWD/xbmc-depends \
           --disable-debug
 
-    - name: Build native depends
+    - name: Set up Xcode version
+      run: |
+        sudo xcode-select -s /Applications/Xcode_15.4.app/Contents/Developer
+        xcodebuild -version
+
+    - name: Build native depends (Apple)
       working-directory: /tmp/kodi/tools/depends
       run: make -j$(sysctl -n hw.ncpu) -C native
 
@@ -260,15 +265,18 @@ jobs:
       working-directory: /tmp/kodi/tools/depends
       run: make -j$(sysctl -n hw.ncpu) -C target
 
-    - name: Build binary addons
+    - name: Build binary addons (Apple)
       working-directory: /tmp/kodi
       run: make -j$(sysctl -n hw.ncpu) -C tools/depends/target/binary-addons
 
-    - name: Configure XBMC
+    - name: Configure XBMC (Apple)
       working-directory: /tmp/kodi
-      run: make -C tools/depends/target/cmakebuildsys
+      run: |
+        export SDKROOT=$(xcrun --show-sdk-path)
+        make -C tools/depends/target/cmakebuildsys \
+          CMAKE_EXTRA_ARGUMENTS="-DCMAKE_OSX_DEPLOYMENT_TARGET=14.0 -DCMAKE_OSX_SYSROOT=$SDKROOT -DCMAKE_TRY_COMPILE_TARGET_TYPE=STATIC_LIBRARY"
 
-    - name: Build XBMC
+    - name: Build XBMC (Apple)
       working-directory: /tmp/kodi
       run: |
         cd build
