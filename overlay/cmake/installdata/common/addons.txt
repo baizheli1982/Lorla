@@ -24,6 +24,7 @@ addons/script.skinvariables/*
 addons/script.texturemaker/*
 addons/plugin.video.themoviedb.helper/*
 addons/resource.language.en_gb/*
+addons/resource.language.zh_cn/*
 addons/resource.uisounds.kodi/*
 addons/script.module.pycryptodome/*
 addons/service.xbmc.versioncheck/*

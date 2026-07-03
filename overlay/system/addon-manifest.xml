@@ -27,6 +27,7 @@
   <addon>metadata.tvshows.themoviedb.org.python</addon>
   <addon>repository.xbmc.org</addon>
   <addon>resource.language.en_gb</addon>
+  <addon>resource.language.zh_cn</addon>
   <addon>resource.uisounds.kodi</addon>
   <addon>script.module.pycryptodome</addon>
   <addon>plugin.video.themoviedb.helper</addon>
