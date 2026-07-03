@@ -23,7 +23,10 @@ jobs:
         ./bootstrap
         ./configure --host=aarch64-apple-darwin --with-platform=ios --prefix=$PWD/xbmc-depends --disable-debug
     - working-directory: /tmp/kodi/tools/depends
-      run: make -j$(sysctl -n hw.ncpu) -C native
+      run: export LDFLAGS="-Wl,-ld_classic"
+export CFLAGS="-Wl,-ld_classic"
+export CXXFLAGS="-Wl,-ld_classic"
+make -j$(sysctl -n hw.ncpu) -C native
     - working-directory: /tmp/kodi/tools/depends
       run: make -j$(sysctl -n hw.ncpu) -C target
     - working-directory: /tmp/kodi

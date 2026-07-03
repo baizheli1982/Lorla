@@ -21,7 +21,7 @@ jobs:
     - shell: bash
       run: cd /d/kodi && WS=$(echo "$GITHUB_WORKSPACE" | sed 's|\\|/|g' | sed 's|^\([A-Z]\):|/\1|') && cp -rf "$WS/overlay/"* . && cp -rf "$WS/overlay/addons/"* project/addons/ 2>/dev/null || true
     - shell: cmd
-      run: cd /d D:\kodi && cmake -B build -G "Visual Studio 17 2022" -A x64 -DCMAKE_BUILD_TYPE=Release -DENABLE_INTERNAL_FFMPEG=ON
+      run: cd /d D:\kodi && cmake -B build -G "Visual Studio 17 2022" -A x64 -DCMAKE_BUILD_TYPE=Release -DENABLE_INTERNAL_FFMPEG=ON -DENABLE_INTERNAL_CROSSGUID=ON -DENABLE_INTERNAL_FMT=ON -DENABLE_INTERNAL_SPDLOG=ON
     - shell: cmd
       run: cd /d D:\kodi && cmake --build build --config Release -j %NUMBER_OF_PROCESSORS%
     - shell: cmd
