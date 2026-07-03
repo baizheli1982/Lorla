@@ -142,12 +142,15 @@ jobs:
       working-directory: /tmp/kodi
       run: cd build && make apk
 
-    - name: Upload APK (GitHub)
-      uses: actions/upload-artifact@v4
+    - name: Upload to GitHub Release
+      uses: softprops/action-gh-release@v2
       with:
-        name: kodi-lorla-${{ matrix.arch }}
-        path: /tmp/kodi/kodiapp*.apk
-        retention-days: 30
+        tag_name: android-${{ matrix.arch }}-${{ github.run_number }}
+        name: Lorla Android ${{ matrix.arch }} (Build ${{ github.run_number }})
+        files: /tmp/kodi/kodiapp*.apk
+        prerelease: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Upload to Gitee Release
       if: env.GITEE_TOKEN != ''
