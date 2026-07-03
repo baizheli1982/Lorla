@@ -27,10 +27,12 @@ jobs:
         ./configure --host=aarch64-apple-darwin --with-platform=macos --prefix=$PWD/xbmc-depends --disable-debug
     - working-directory: /tmp/kodi/tools/depends
       run: |
-        export LDFLAGS="-Wl,-ld_classic"
-        export CFLAGS="-Wl,-ld_classic"  
-        export CXXFLAGS="-Wl,-ld_classic"
-        make -j$(sysctl -n hw.ncpu) -C native
+        export ARCHFLAGS="-arch arm64"
+        export MACOSX_DEPLOYMENT_TARGET="14.5"
+        export DEVELOPER_DIR="/Applications/Xcode_15.4.app/Contents/Developer"
+        export SDKROOT=$(xcrun --sdk macosx --show-sdk-path)
+        make -C native clean 2>/dev/null || true
+        make -j$(sysctl -n hw.ncpu) -C native EXTRA_CMAKE_ARGS="-DCMAKE_OSX_ARCHITECTURES=arm64 -DCMAKE_SYSTEM_PROCESSOR=arm64"
     - working-directory: /tmp/kodi/tools/depends
       run: make -j$(sysctl -n hw.ncpu) -C target
     - working-directory: /tmp/kodi
