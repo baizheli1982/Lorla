@@ -721,16 +721,10 @@
             <centertop>400</centertop>
             <orientation>vertical</orientation>
             <align>center</align>
-            <control type="image">
-                <width>96</width>
-                <height>96</height>
-                <centerleft>50%</centerleft>
-                <aspectratio>keep</aspectratio>
-                <texture colordiffuse="$VAR[ColorHighlight]">special://skin/extras/icons/kodi.png</texture>
-            </control>
+<!-- logo icon removed -->
             <control type="label">
-                <height>32</height>
-                <textcolor>main_fg_100</textcolor>
+                <height>64</height>
+                <textcolor>$VAR[ColorHighlight]</textcolor>
                 <label>LORLA</label>
                 <font>font_logo_large</font>
                 <align>center</align>
@@ -748,17 +742,9 @@
                 <width>auto</width>
                 <font>font_title_huge</font>
                 <textcolor>$VAR[ColorHighlight]</textcolor>
-                <label>[COLOR=main_logo]Arctic[/COLOR] Fuse</label>
+                <label>LORLA</label>
             </control>
-            <control type="label">
-                <aligny>center</aligny>
-                <height>50</height>
-                <align>center</align>
-                <width>auto</width>
-                <font>font_head_bold</font>
-                <textcolor>$VAR[ColorHighlight]</textcolor>
-                <label>$NUMBER[3]</label>
-            </control>
+<!-- version number removed -->
         </control>
         <control type="group">
             <bottom>80</bottom>
