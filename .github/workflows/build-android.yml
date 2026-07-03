@@ -117,6 +117,13 @@ jobs:
       working-directory: /tmp/kodi/tools/depends
       run: make -j$(nproc) -C native
 
+    - name: Upload native tools (for RPi reuse)
+      uses: actions/upload-artifact@v4
+      with:
+        name: kodi-native-tools-${{ matrix.arch }}
+        path: /tmp/kodi/tools/depends/native/
+        retention-days: 1
+
     - name: Build target depends
       working-directory: /tmp/kodi/tools/depends
       run: make -j$(nproc) -C target

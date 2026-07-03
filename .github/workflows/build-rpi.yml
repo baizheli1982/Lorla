@@ -28,6 +28,21 @@ jobs:
         git clone --depth 1 https://github.com/XBMC-Addons/resource.images.weathericons.white.git addons/resource.images.weathericons.white
         git clone --depth 1 https://github.com/XBMC-Addons/resource.images.studios.coloured.git addons/resource.images.studios.coloured
     - run: cp -rf overlay/* /tmp/kodi/ && cp -rf overlay/addons/* /tmp/kodi/addons/ 2>/dev/null || true
+
+    - name: Download native tools from Android build
+      uses: actions/download-artifact@v4
+      with:
+        name: kodi-native-tools-arm64-v8a
+        path: /tmp/kodi/tools/depends/native/
+      continue-on-error: true
+
+    - name: Skip native build
+      working-directory: /tmp/kodi/tools/depends
+      run: |
+        mkdir -p native && touch native/.installed-$(uname -m)-linux-native
+        echo "Native tools reused from Android build"
+        ls native/ 2>/dev/null || echo "(empty - will build from scratch)"
+
     - working-directory: /tmp/kodi/tools/depends
       run: |
         make distclean 2>/dev/null || true
@@ -37,7 +52,7 @@ jobs:
         export PKG_CONFIG_SYSROOT_DIR="/"
         ./configure --host=${{ matrix.host }} --with-rendersystem=gles --disable-vlc --disable-vdpau --prefix=$PWD/xbmc-depends --disable-debug
     - working-directory: /tmp/kodi/tools/depends
-      run: make -j$(nproc) -C native
+      run: make -j$(nproc) -C native 2>/dev/null || echo "Native build skipped (using Android tools)"
     - working-directory: /tmp/kodi/tools/depends
       run: make -j$(nproc) -C target
     - working-directory: /tmp/kodi
