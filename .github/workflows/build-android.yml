@@ -149,24 +149,20 @@ XEOF
       working-directory: /tmp/kodi
       run: cd build && make apk
 
-    - name: Upload to GitHub Release
-      uses: softprops/action-gh-release@v2
+    - name: Upload APK
+      uses: actions/upload-artifact@v4
       with:
-        tag_name: android-${{ matrix.arch }}-${{ github.run_number }}
-        name: Lorla Android ${{ matrix.arch }} (Build ${{ github.run_number }})
-        files: /tmp/kodi/kodiapp*.apk
-        prerelease: true
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        name: kodi-lorla-${{ matrix.arch }}
+        path: /tmp/kodi/kodiapp*.apk
+        retention-days: 30
 
     - name: Upload to Gitee Release
       if: env.GITEE_TOKEN != ''
+      continue-on-error: true
       env:
         GITEE_TOKEN: ${{ secrets.GITEE_TOKEN }}
       run: |
         APK=$(ls /tmp/kodi/kodiapp*.apk | head -1)
-        echo "Uploading to Gitee..."
         curl -s -X POST "https://gitee.com/api/v5/repos/bai-zheli/lorla/releases" \
           -H "Content-Type: application/json" \
           -d "{\"access_token\":\"$GITEE_TOKEN\",\"tag_name\":\"android-${{ matrix.arch }}-$(date +%Y%m%d%H%M)\",\"name\":\"Lorla Android ${{ matrix.arch }}\",\"body\":\"$(date +%Y-%m-%d) 自动编译\",\"target_commitish\":\"main\"}"
-      continue-on-error: true
