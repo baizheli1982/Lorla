@@ -31,6 +31,7 @@ jobs:
       working-directory: /tmp/kodi
       run: |
         git clone --depth 1 --branch omega https://github.com/jurialmunkey/skin.arctic.fuse.3.git addons/skin.arctic.fuse.3
+        sed -i 's|Arctic Fuse 3|Lorla|g; s|jurialmunkey|Lorla Team|g' addons/skin.arctic.fuse.3/addon.xml
         git clone --depth 1 --branch nexus https://github.com/jurialmunkey/script.skinvariables.git addons/script.skinvariables
         git clone --depth 1 https://github.com/jurialmunkey/script.texturemaker.git addons/script.texturemaker
         git clone --depth 1 --branch nexus https://github.com/jurialmunkey/plugin.video.themoviedb.helper.git addons/plugin.video.themoviedb.helper
