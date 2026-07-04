@@ -1,6 +1,6 @@
 APP_NAME Lorla
 COMPANY_NAME XBMC Foundation
-DEV_NAME Team Kodi
+DEV_NAME Lorla Team
 ABOUT_WEBSITE https://kodi.tv/about/
 FORUM_WEBSITE https://forum.kodi.tv/
 DOCS_WEBSITE https://kodi.wiki/
@@ -13,6 +13,6 @@ VERSION_CODE 21.3.0
 ADDON_API 21.3.0
 ADDON_REPOS repository.xbmc.org|https://mirrors.kodi.tv
 APP_PACKAGE org.xbmc.kodi
-PACKAGE_IDENTITY XBMCFoundation.Kodi
+PACKAGE_IDENTITY XBMCFoundation.Lorla
 PACKAGE_PUBLISHER C62BD90A-CDD8-477F-96C3-B25992247B97
 PACKAGE_DESCRIPTION Lorla is a an open source (GPL) software media center for playing videos, music, pictures, games, and more.
