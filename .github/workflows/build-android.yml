@@ -53,7 +53,7 @@ XEOF
         # 下载开源的思源黑体（支持中文），约5MB
         wget -q "https://github.com/adobe-fonts/source-han-sans/raw/release/OTF/SimplifiedChinese/SourceHanSansSC-Regular.otf" -O /tmp/cnfont.otf 2>/dev/null || \
         wget -q "https://raw.githubusercontent.com/notofonts/noto-cjk/main/Sans/OTF/SimplifiedChinese/NotoSansCJKsc-Regular.otf" -O /tmp/cnfont.otf 2>/dev/null || \
-        cp /tmp/cnfont.otf /tmp/kodi/addons/skin.arctic.fuse.3/fonts/InterCJKSC-Medium.ttf 2>/dev/null || true
+        cp /tmp/cnfont.otf /tmp/kodi/addons/skin.arctic.fuse.3/fonts/SourceHanSansSC-Medium.otf || true
         cp /tmp/cnfont.otf /tmp/kodi/addons/skin.arctic.fuse.3/fonts/arial.ttf 2>/dev/null || true
         echo "Chinese font installed"
 

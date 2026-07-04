@@ -3,13 +3,14 @@
 
     <fontset id="Default" unicode="false">
         <include>Font_Default</include>
+        <filename>SourceHanSansSC-Medium.otf</filename>
     </fontset>
 
     <fontset id="Default (Unicode)" unicode="true">
         <include content="Font_Default">
-            <param name="font_bold">resource://resource.font.robotocjksc/Inter-Unicode-Bold.ttf</param>
-            <param name="font_regular">resource://resource.font.robotocjksc/Inter-Unicode-Regular.ttf</param>
-            <param name="font_light">resource://resource.font.robotocjksc/Inter-Unicode-Regular.ttf</param>
+            <param name="font_bold">SourceHanSansSC-Medium.otf</param>
+            <param name="font_regular">SourceHanSansSC-Medium.otf</param>
+            <param name="font_light">SourceHanSansSC-Medium.otf</param>
             <param name="style_light">light</param>
 
             <param name="plot_linespacing_head">1.03</param>
