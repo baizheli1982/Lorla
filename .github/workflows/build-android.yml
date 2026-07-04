@@ -31,23 +31,18 @@ jobs:
       working-directory: /tmp/kodi
       run: |
         git clone --depth 1 --branch omega https://github.com/jurialmunkey/skin.arctic.fuse.3.git addons/skin.arctic.fuse.3
-        sed -i 's|Arctic Fuse 3|Lorla|g; s|jurialmunkey|Lorla Team|g' addons/skin.arctic.fuse.3/addon.xml
         git clone --depth 1 --branch nexus https://github.com/jurialmunkey/script.skinvariables.git addons/script.skinvariables
         git clone --depth 1 https://github.com/jurialmunkey/script.texturemaker.git addons/script.texturemaker
         git clone --depth 1 --branch nexus https://github.com/jurialmunkey/plugin.video.themoviedb.helper.git addons/plugin.video.themoviedb.helper
         git clone --depth 1 https://github.com/jurialmunkey/resource.font.robotocjksc.git addons/resource.font.robotocjksc
         git clone --depth 1 https://github.com/XBMC-Addons/resource.images.weathericons.white.git addons/resource.images.weathericons.white
         git clone --depth 1 https://github.com/XBMC-Addons/resource.images.studios.coloured.git addons/resource.images.studios.coloured
-        git clone --depth 1 https://github.com/jurialmunkey/script.module.jurialmunkey.git addons/script.module.jurialmunkey
-        git clone --depth 1 https://github.com/jurialmunkey/script.module.infotagger.git addons/script.module.infotagger
-        mkdir -p addons/script.module.requests/resources/lib && pip3 install --target addons/script.module.requests/resources/lib requests && echo '<?xml version="1.0"?><addon id="script.module.requests" name="requests" version="2.28.0" provider-name="Kodi"><requires><import addon="xbmc.python" version="3.0.0"/></requires><extension point="xbmc.python.module" library="resources/lib"/></addon>' > addons/script.module.requests/addon.xml
 
     - name: Apply overlay
       run: |
         cp -rf overlay/* /tmp/kodi/
         cp -rf overlay/addons/* /tmp/kodi/addons/ 2>/dev/null || true
 
-    
     - name: Setup JDK 17
       uses: actions/setup-java@v4
       with:
@@ -114,7 +109,7 @@ jobs:
       working-directory: /tmp/kodi
       run: cd build && make apk
 
-    - name: Upload APK
+    - name: Upload APK (GitHub)
       uses: actions/upload-artifact@v4
       with:
         name: kodi-lorla-${{ matrix.arch }}
@@ -123,11 +118,12 @@ jobs:
 
     - name: Upload to Gitee Release
       if: env.GITEE_TOKEN != ''
-      continue-on-error: true
       env:
         GITEE_TOKEN: ${{ secrets.GITEE_TOKEN }}
       run: |
         APK=$(ls /tmp/kodi/kodiapp*.apk | head -1)
+        echo "Uploading to Gitee..."
         curl -s -X POST "https://gitee.com/api/v5/repos/bai-zheli/lorla/releases" \
           -H "Content-Type: application/json" \
           -d "{\"access_token\":\"$GITEE_TOKEN\",\"tag_name\":\"android-${{ matrix.arch }}-$(date +%Y%m%d%H%M)\",\"name\":\"Lorla Android ${{ matrix.arch }}\",\"body\":\"$(date +%Y-%m-%d) 自动编译\",\"target_commitish\":\"main\"}"
+      continue-on-error: true
