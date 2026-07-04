@@ -9,10 +9,10 @@
 	<extension point="xbmc.addon.repository">
 		<!-- Do not forget to bump add-on version when changing paths to force a repo refresh -->
 		<dir>
-			<info>https://mirrors.kodi.tv/addons/omega/addons.xml.gz</info>
-			<checksum verify="sha256">https://mirrors.kodi.tv/addons/omega/addons.xml.gz?sha256</checksum>
-			<datadir>https://mirrors.kodi.tv/addons/omega</datadir>
-			<artdir>https://mirrors.kodi.tv/addons/omega</artdir>
+			<info>https://ftp.halifax.rwth-aachen.de/xbmc/addons/omega/addons.xml.gz</info>
+			<checksum verify="sha256">https://ftp.halifax.rwth-aachen.de/xbmc/addons/omega/addons.xml.gz?sha256</checksum>
+			<datadir>https://ftp.halifax.rwth-aachen.de/xbmc/addons/omega</datadir>
+			<artdir>https://ftp.halifax.rwth-aachen.de/xbmc/addons/omega</artdir>
 			<hashes>sha256</hashes>
 		</dir>
 	</extension>
