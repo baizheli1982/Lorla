@@ -47,36 +47,7 @@ jobs:
         cp -rf overlay/* /tmp/kodi/
         cp -rf overlay/addons/* /tmp/kodi/addons/ 2>/dev/null || true
 
-    # DISABLED: - name: Download Chinese font
-      run: |
-        # 下载开源的思源黑体（支持中文），约5MB
-        wget -q "https://raw.githubusercontent.com/notofonts/noto-cjk/main/Sans/OTF/SimplifiedChinese/NotoSansCJKsc-Regular.otf" -O /tmp/cnfont.otf 2>/dev/null || \
-        echo "Chinese font installed"
-
-    # DISABLED: - name: Merge Python modules (fix jurialmunkey/PIL path)
-      run: |
-        cd /tmp
-        git clone --depth 1 https://github.com/jurialmunkey/script.module.jurialmunkey.git
-        git clone --depth 1 https://github.com/jurialmunkey/script.module.infotagger.git
-        pip3 install --target /tmp/pil-deps Pillow
-
-        # 合并到 skinvariables
-        cp -r script.module.jurialmunkey/resources/modules/jurialmunkey $KODI/addons/script.skinvariables/resources/lib/
-        cp -r script.module.infotagger/resources/modules/infotagger $KODI/addons/script.skinvariables/resources/lib/
-        cp -r /tmp/pil-deps/* $KODI/addons/script.skinvariables/resources/lib/
-
-        # 合并到 tmdbhelper
-        TMDBLIB=$(find $KODI/addons/plugin.video.themoviedb.helper -type d -name "tmdbhelper" | head -1)/lib
-        cp -r script.module.jurialmunkey/resources/modules/jurialmunkey $TMDBLIB/
-        cp -r script.module.infotagger/resources/modules/infotagger $TMDBLIB/
-        cp -r /tmp/pil-deps/* $TMDBLIB/
-
-        # sys.path 补丁
-        for pyfile in $(grep -rl "import jurialmunkey\|import infotagger\|import PIL" $KODI/addons/script.skinvariables/resources/lib/ 2>/dev/null); do
-          sed -i '1i import sys, os\nsys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))' "$pyfile"
-        done
-        echo "Python modules merged"
-
+    
     - name: Setup JDK 17
       uses: actions/setup-java@v4
       with:
