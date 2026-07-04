@@ -722,13 +722,7 @@
             <orientation>vertical</orientation>
             <align>center</align>
 <!-- logo icon removed -->
-            <control type="label">
-                <height>64</height>
-                <textcolor>$VAR[ColorHighlight]</textcolor>
-                <label>LORLA</label>
-                <font>font_logo_large</font>
-                <align>center</align>
-            </control>
+<!-- small LORLA removed -->
         </control>
         <control type="grouplist">
             <height>80</height>
