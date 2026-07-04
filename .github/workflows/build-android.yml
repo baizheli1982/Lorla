@@ -107,7 +107,7 @@ jobs:
 
     - name: Package APK
       working-directory: /tmp/kodi
-      run: cd build && make apk
+      run: cd build && make apk || make apk
 
     - name: Upload APK (GitHub)
       uses: actions/upload-artifact@v4
