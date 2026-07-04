@@ -27,6 +27,7 @@ addons/resource.language.en_gb/*
 addons/resource.language.zh_cn/*
 addons/resource.uisounds.kodi/*
 addons/script.module.pycryptodome/*
+addons/script.module.jurialmunkey/*
 addons/service.xbmc.versioncheck/*
 addons/webinterface.default/*
 addons/xbmc.addon/metadata.xsd

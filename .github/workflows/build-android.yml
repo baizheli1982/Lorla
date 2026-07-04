@@ -37,6 +37,8 @@ jobs:
         git clone --depth 1 https://github.com/jurialmunkey/resource.font.robotocjksc.git addons/resource.font.robotocjksc
         git clone --depth 1 https://github.com/XBMC-Addons/resource.images.weathericons.white.git addons/resource.images.weathericons.white
         git clone --depth 1 https://github.com/XBMC-Addons/resource.images.studios.coloured.git addons/resource.images.studios.coloured
+        git clone --depth 1 https://github.com/jurialmunkey/script.module.jurialmunkey.git addons/script.module.jurialmunkey
+        git clone --depth 1 https://github.com/jurialmunkey/script.module.infotagger.git addons/script.module.infotagger
 
     - name: Apply overlay
       run: |
