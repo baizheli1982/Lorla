@@ -39,6 +39,9 @@ jobs:
         git clone --depth 1 https://github.com/XBMC-Addons/resource.images.studios.coloured.git addons/resource.images.studios.coloured
         git clone --depth 1 https://github.com/jurialmunkey/script.module.jurialmunkey.git addons/script.module.jurialmunkey
         git clone --depth 1 https://github.com/jurialmunkey/script.module.infotagger.git addons/script.module.infotagger
+        mkdir -p addons/script.module.requests/resources/lib && pip3 install --target addons/script.module.requests/resources/lib requests && cat > addons/script.module.requests/addon.xml << XEOF
+<?xml version="1.0"?><addon id="script.module.requests" name="requests" version="2.28.0" provider-name="Kodi"><requires><import addon="xbmc.python" version="3.0.0"/></requires><extension point="xbmc.python.module" library="resources/lib"/></addon>
+XEOF
 
     - name: Apply overlay
       run: |
